@@ -1,0 +1,58 @@
+# =============================================================================
+# AISocial Voice Agent - Docker Compose
+# =============================================================================
+# Local development environment
+# Usage: docker-compose up --build
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Main Voice Agent API
+  voice-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aisocial-voice-agent
+    ports:
+      - "8080:8080"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - BOT_CONFIG=${BOT_CONFIG:-default}
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:8080/webhook}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PORT=8080
+      - HOST=0.0.0.0
+    volumes:
+      - ./aisocial_voice_agent/configs:/app/aisocial_voice_agent/configs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aisocial-network
+
+  # Redis for session management (Phase 3)
+  redis:
+    image: redis:7-alpine
+    container_name: aisocial-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - aisocial-network
+    profiles:
+      - full
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  aisocial-network:
+    driver: bridge
