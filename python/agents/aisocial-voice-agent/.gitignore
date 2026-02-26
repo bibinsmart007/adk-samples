@@ -1,0 +1,66 @@
+# =============================================================================
+# AISocial Voice Agent - .gitignore
+# =============================================================================
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# OS
+*.DS_Store
+*.AppleDouble
+*.LSOverride
+
+# Client configs with real data (keep templates only)
+# Uncomment below if you have client-specific configs with secrets
+# aisocial_voice_agent/configs/client_*.yaml
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite3
