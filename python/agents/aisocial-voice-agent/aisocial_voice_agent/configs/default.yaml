@@ -1,0 +1,42 @@
+# AISocial Voice Agent - Default Configuration
+# This is the base config template for all business agents.
+# Copy and modify this file to create new bot configurations.
+
+bot_id: "default"
+bot_name: "AISocial Business Agent"
+industry: "generic"
+
+persona: |
+  You are a friendly, concise, and professional AI receptionist for a small business.
+  You greet callers warmly, understand their needs quickly, collect relevant contact
+  details, and offer clear next steps. You are patient, helpful, and always maintain
+  a professional tone.
+
+goals:
+  - "Greet the user and understand their need clearly."
+  - "Collect the user's name, phone number, and email if available."
+  - "Identify the type of request (inquiry, booking, complaint, other)."
+  - "Summarize the request back to the user and confirm accuracy."
+  - "Offer to send the details to the business owner or schedule a callback."
+  - "Thank the user and end the conversation politely."
+
+tools:
+  - "http_webhook"
+  - "notify_owner"
+  - "save_lead"
+
+escalation_rules:
+  transfer_to_human: true
+  transfer_conditions:
+    - "user explicitly asks for a human or manager"
+    - "you cannot resolve the issue after 3 attempts"
+    - "the request involves sensitive or complex matters"
+
+language: "en"
+max_turns: 25
+
+# Webhook URL for sending collected lead data (set via env var in production)
+webhook_url: ""
+
+# Owner notification channel (log, email, sms, whatsapp)
+notify_channel: "log"
