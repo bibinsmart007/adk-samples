@@ -1,0 +1,130 @@
+# =============================================================================
+# AISocial Voice Agent - Sample Restaurant Bot Configuration
+# =============================================================================
+# This is an example config showing how to create a restaurant phone bot.
+# Copy this file and modify for your client's business.
+# Usage: BOT_CONFIG=restaurant_bot python server.py
+# =============================================================================
+
+# Bot Identity
+bot_name: "Bella Italia Restaurant Bot"
+bot_id: "restaurant-bella-italia"
+version: "1.0.0"
+
+# Business Information
+business:
+  name: "Bella Italia Restaurant"
+  type: "restaurant"
+  phone: "+1-555-0123"
+  address: "123 Main Street, Downtown"
+  website: "https://bellaitalia.example.com"
+  hours:
+    monday: "11:00 AM - 10:00 PM"
+    tuesday: "11:00 AM - 10:00 PM"
+    wednesday: "11:00 AM - 10:00 PM"
+    thursday: "11:00 AM - 10:00 PM"
+    friday: "11:00 AM - 11:00 PM"
+    saturday: "10:00 AM - 11:00 PM"
+    sunday: "10:00 AM - 9:00 PM"
+
+# AI Model Settings
+model:
+  name: "gemini-2.5-flash"
+  temperature: 0.7
+  max_tokens: 1024
+
+# Agent Persona
+persona:
+  greeting: "Thank you for calling Bella Italia Restaurant! I'm your AI assistant. How can I help you today?"
+  personality: "friendly, warm, knowledgeable about Italian cuisine"
+  language: "en"
+  voice_style: "professional yet casual"
+  system_instruction: |
+    You are the AI phone assistant for Bella Italia Restaurant.
+    You help callers with:
+    - Making reservations (collect name, party size, date, time)
+    - Answering menu questions
+    - Providing hours and location info
+    - Taking takeout/delivery orders
+    - Handling special dietary requests
+    
+    Always be polite and helpful. If you cannot handle a request,
+    offer to transfer to a human staff member.
+    Never make up menu items or prices - use only what's in the config.
+
+# Sub-Agents Configuration
+sub_agents:
+  reservation:
+    enabled: true
+    instruction: |
+      Handle reservation requests. Collect:
+      - Guest name
+      - Party size (1-20)
+      - Preferred date and time
+      - Special requests (birthday, anniversary, dietary needs)
+      Confirm all details before saving.
+    
+  menu_helper:
+    enabled: true
+    instruction: |
+      Answer questions about the menu. Key items:
+      - Appetizers: Bruschetta ($12), Calamari ($14), Caprese ($11)
+      - Pasta: Spaghetti Bolognese ($18), Fettuccine Alfredo ($17), Lasagna ($19)
+      - Pizza: Margherita ($16), Pepperoni ($18), Quattro Formaggi ($20)
+      - Desserts: Tiramisu ($10), Panna Cotta ($9), Gelato ($8)
+      Mention daily specials and recommend popular items.
+
+  order_taker:
+    enabled: true
+    instruction: |
+      Take takeout and delivery orders. Collect:
+      - Items and quantities
+      - Special modifications
+      - Pickup or delivery
+      - Contact phone number
+      - Delivery address (if applicable)
+      Calculate estimated total and prep time.
+
+# Tools Configuration
+tools:
+  webhook:
+    enabled: true
+    url: "${WEBHOOK_URL}"
+    events:
+      - reservation_created
+      - order_placed
+      - callback_requested
+  
+  save_lead:
+    enabled: true
+    collect:
+      - name
+      - phone
+      - email
+      - reservation_details
+  
+  notify_owner:
+    enabled: true
+    channels:
+      - email
+      - sms
+    triggers:
+      - large_party  # 8+ guests
+      - vip_customer
+      - complaint
+      - callback_request
+
+# Call Handling
+call_settings:
+  max_duration_minutes: 10
+  silence_timeout_seconds: 30
+  transfer_number: "+1-555-0124"  # Human staff fallback
+  after_hours_message: "We're currently closed. Our hours are listed on our website. Please call back during business hours or leave a message."
+  voicemail_enabled: true
+
+# Analytics
+analytics:
+  track_calls: true
+  track_reservations: true
+  track_orders: true
+  sentiment_analysis: true
